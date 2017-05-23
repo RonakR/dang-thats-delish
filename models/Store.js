@@ -11,9 +11,29 @@ const storeSchema = new mongoose.Schema({
   slug: String,
   description: {
     type: String,
-    trim: true
+    trim: true,
   },
-  tags: [String]
+  tags: [String],
+  created: {
+    type: Date,
+    default: Date.now,
+  },
+  location: {
+    type: {
+      type: String,
+      default: 'Point',
+    },
+    coordinates: [
+      {
+        type: Number,
+        required: 'You must supply coordinates!',
+      },
+    ],
+    address: {
+      type: String,
+      required: 'You must supply an address',
+    },
+  },
 });
 
 storeSchema.pre('save', function(next) {
@@ -24,6 +44,6 @@ storeSchema.pre('save', function(next) {
   this.slug = slug(this.name);
   next();
   // TODO Make more resiliant slugs so they are unique
-})
+});
 
 module.exports = mongoose.model('Store', storeSchema);
