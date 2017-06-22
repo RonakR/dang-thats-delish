@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 const Store = mongoose.model('Store');
 const multer = require('multer');
+const jimp = require('jimp');
+const uuid = require('uuid');
+
 const multerOptions = {
   storage: multer.memoryStorage(),
   fileFilter(req, file, next) {
@@ -22,6 +25,15 @@ exports.addStore = (req, res) => {
 };
 
 exports.upload = multer(multerOptions).single('photo');
+
+exports.resize = async (req, res, next) => {
+  // Check if there is no new file to resize
+  if (!req.file) {
+    next(); //skip to the next middleware
+    return;
+  }
+  console.log(req.file);
+};
 
 exports.createStore = async (req, res) => {
   const store = await new Store(req.body).save();
